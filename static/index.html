@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifePilot AI — Your Multi-Agent Personal Guide</title>
+  <meta name="description" content="LifePilot AI converts complex life goals into a unified, reconciled action plan featuring automated safety audits and scheduling.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Inline script to prevent FOUC (Flash of Unstyled Content)
+    {
+      const colorScheme = "dark";
+      document.documentElement.setAttribute("data-theme", colorScheme);
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Background Animated Shapes -->
+  <div class="bg-gradient-shapes">
+    <div class="shape shape-1" id="shape-accent-1"></div>
+    <div class="shape shape-2" id="shape-accent-2"></div>
+    <div class="shape shape-3" id="shape-accent-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <div class="logo" id="logo-branding">
+        <i class="fa-solid fa-compass-drafting logo-icon-dark"></i>
+        <i class="fa-solid fa-compass logo-icon-light"></i>
+        <span>LifePilot AI</span>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle hidden" id="theme-toggler" aria-label="Toggle light/dark theme">
+          <i class="fa-solid fa-sun" id="theme-toggle-icon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    
+    <!-- Sidebar Controls -->
+    <div class="sidebar">
+      
+      <!-- Input Goal Card -->
+      <div class="card" id="goal-input-card">
+        <div class="card-title">
+          <i class="fa-solid fa-rocket"></i>
+          <span>Define Your Goal</span>
+        </div>
+        <div class="form-group">
+          <label for="user-goal-text">What is your compound life goal?</label>
+          <textarea id="user-goal-text" rows="4" placeholder="e.g. I want to change jobs, learn Python, run a marathon, and save $400 a month."></textarea>
+        </div>
+        <button class="btn btn-primary" id="btn-generate-plan">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Launch LifePilot</span>
+        </button>
+        <div class="mt-1" style="text-align: center;">
+          <button class="btn btn-seed" id="btn-seed-example">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Load Demo Example</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- User Profile Card (Hidden until state exists) -->
+      <div class="card hidden" id="profile-card">
+        <div class="card-title">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>Extracted User Profile</span>
+        </div>
+        <div class="profile-list" id="profile-values-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Follow-up Update Card (Hidden until state exists) -->
+      <div class="card hidden" id="follow-up-card">
+        <div class="card-title">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Refine & Update Plan</span>
+        </div>
+        <div class="form-group">
+          <label for="follow-up-text">Request adjustments to your plan</label>
+          <textarea id="follow-up-text" rows="3" placeholder="e.g. Change savings target to $600/month or make the walking routine shorter."></textarea>
+        </div>
+        <button class="btn btn-outline" id="btn-update-plan">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Apply Adjustments</span>
+        </button>
+      </div>
+
+      <!-- Reset Option -->
+      <button class="btn btn-secondary hidden" id="btn-clear-state">
+        <i class="fa-solid fa-trash-can"></i>
+        <span>Clear Saved State</span>
+      </button>
+
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="dashboard-panel">
+      
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <h1>One goal in. One plan that actually agrees with itself.</h1>
+        <p>LifePilot turns a compound life goal into a career, learning, health, budget, and schedule plan — reconciled so they don't contradict, and audited for safety.</p>
+      </div>
+      
+      <!-- Tabs Navigation -->
+      <div class="tabs-container">
+        <button class="tab-btn active" id="tab-btn-plan" onclick="switchTab('plan')">
+          <i class="fa-solid fa-route"></i> Unified Action Plan
+        </button>
+        <button class="tab-btn" id="tab-btn-guardian" onclick="switchTab('guardian')">
+          <i class="fa-solid fa-shield-halved"></i> Guardian Audit
+        </button>
+        <button class="tab-btn" id="tab-btn-evals" onclick="switchTab('evals')">
+          <i class="fa-solid fa-vial-circle-check"></i> System Evals
+        </button>
+      </div>
+
+      <!-- TAB 1: Unified Action Plan -->
+      <div class="tab-content active" id="tab-content-plan">
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="plan-empty-state">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <h3>No Plan Generated Yet</h3>
+          <p>Define a compound goal on the left and run LifePilot to create your unified roadmap.</p>
+        </div>
+
+        <!-- Plan Grid -->
+        <div class="plan-grid hidden" id="plan-grid-container">
+          
+          <!-- Career Roadmap -->
+          <div class="plan-section career" id="plan-section-career">
+            <div class="plan-section-title">
+              <div class="title-left">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Career Roadmap</span>
+                <span class="plan-section-badge">Career</span>
+              </div>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="markdown-body" id="plan-body-career"></div>
+          </div>
+
+          <!-- Learning Plan -->
+          <div class="plan-section learning" id="plan-section-learning">
+            <div class="plan-section-title">
+              <div class="title-left">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>Study & Learning Plan</span>
+                <span class="plan-section-badge">Learning</span>
+              </div>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="markdown-body" id="plan-body-learning"></div>
+          </div>
+
+          <!-- Habit Plan -->
+          <div class="plan-section habit" id="plan-section-habit">
+            <div class="plan-section-title">
+              <div class="title-left">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <span>Healthy-Habit Plan</span>
+                <span class="plan-section-badge">Habits</span>
+              </div>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="markdown-body" id="plan-body-habit"></div>
+          </div>
+
+          <!-- Budgeting Plan -->
+          <div class="plan-section budget" id="plan-section-budget">
+            <div class="plan-section-title">
+              <div class="title-left">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Budgeting & Savings Plan</span>
+                <span class="plan-section-badge">Finance</span>
+              </div>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="markdown-body" id="plan-body-budget"></div>
+          </div>
+
+          <!-- Weekly Schedule -->
+          <div class="plan-section schedule" id="plan-section-schedule">
+            <div class="plan-section-title">
+              <div class="title-left">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>Reconciled Weekly Schedule</span>
+                <span class="plan-section-badge">Calendar</span>
+              </div>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="markdown-body" id="plan-body-schedule"></div>
+            <div class="mt-2">
+              <a href="/api/download-ics" class="btn btn-primary" id="btn-download-calendar" style="width: auto;">
+                <i class="fa-solid fa-download"></i>
+                <span>Download .ics Calendar</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- TAB 2: Guardian Audit -->
+      <div class="tab-content" id="tab-content-guardian">
+        
+        <div class="empty-state" id="guardian-empty-state">
+          <i class="fa-solid fa-shield"></i>
+          <h3>No Audit Report Available</h3>
+          <p>Every plan is reviewed before you see it — the Guardian removes medical or financial overreach, adds required disclaimers, and flags any target that contradicts another.</p>
+        </div>
+
+        <div class="guardian-panel hidden" id="guardian-panel-container">
+          <div class="guardian-header">
+            <div class="card-title" style="margin-bottom: 0;">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Guardian Agent Evaluation</span>
+            </div>
+            <div class="guardian-badge" id="guardian-status-badge">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+              <span>Checking...</span>
+            </div>
+          </div>
+
+          <div class="guardian-list" id="guardian-issues-list">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 3: System Evaluations -->
+      <div class="tab-content" id="tab-content-evals">
+        
+        <div class="flex-between" style="margin-bottom: 2rem;">
+          <div>
+            <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 1.5rem;">Automated Quality Evaluations</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Run automated agent test queries validating safety, disclaimers, and preservation rules.</p>
+          </div>
+          <button class="btn btn-primary" id="btn-run-evals" style="width: auto;">
+            <i class="fa-solid fa-square-poll-vertical"></i>
+            <span>View Quality Report</span>
+          </button>
+        </div>
+
+        <div class="eval-panel" id="evals-results-container">
+          <!-- Seed placeholder showing what tests will run -->
+          <div class="empty-state" id="evals-empty-state" style="grid-column: 1 / -1;">
+            <i class="fa-solid fa-flask"></i>
+            <h3>Evaluations Not Started</h3>
+            <p>Click "View Quality Report" above to display the system's guardrail compliance metrics.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-spinner">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loading-title">Configuring LifePilot AI...</div>
+    <div class="loading-subtext" id="loading-desc">Supervisor Agent is decomposing goals...</div>
+    <button class="btn btn-secondary" id="btn-cancel-operation" style="margin-top: 1.5rem; width: auto; font-size: 0.9rem; border-color: rgba(255,255,255,0.2);">
+      <i class="fa-solid fa-ban"></i> Cancel Operation
+    </button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

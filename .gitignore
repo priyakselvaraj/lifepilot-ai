@@ -1,0 +1,33 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python Cache & Builds
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local Environment Variables & Secrets
+.env
+.env.*
+*.key
+service-account*.json
+*.pem
+
+# Local Data & State
+data/
+*.log
+.DS_Store
+
+# IDE Configurations
+.vscode/
+.idea/
