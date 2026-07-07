@@ -60,7 +60,7 @@ The system utilizes exactly three collaborating agents (Lead Supervisor, Domain 
 
 ## Tech Stack
 
-- **Backend**: Python 3.13, **FastAPI** (NDJSON streaming)
+- **Backend**: Python 3.11+, **FastAPI** (NDJSON streaming)
 - **Frontend**: Single Page Application using vanilla **HTML5, CSS3 (Vanilla CSS), and JS**
 - **LLM SDK**: Google GenAI SDK (`gemini-2.5-flash` local default, with `gemini-flash-lite-latest` fallback support)
 - **Deployment**: Docker, Google Cloud Run, Vertex AI (by setting `USE_VERTEX=true`)
@@ -70,7 +70,7 @@ The system utilizes exactly three collaborating agents (Lead Supervisor, Domain 
 ## Getting Started & Local Run
 
 ### 1. Prerequisites
-- Python 3.9+
+- Python 3.11+
 - A Google Gemini API Key (obtained from [Google AI Studio](https://aistudio.google.com/))
 
 ### 2. Installation & Setup
@@ -114,7 +114,7 @@ To bypass local AI Studio request quotas (20 requests per day), you can deploy t
 ```bash
 # Deploys container to Cloud Run and enables keyless Vertex AI authentication
 export USE_VERTEX=true
-export GEMINI_MODEL=gemini-1.5-flash
+export GEMINI_MODEL=gemini-2.5-flash
 bash deploy.sh
 ```
 
